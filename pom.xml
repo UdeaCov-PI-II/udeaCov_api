@@ -11,7 +11,6 @@
 	<groupId>co.edu.udea</groupId>
 	<artifactId>cov-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<fullName>Udea Cov API</fullName>
 	<description>API for Udea cov app</description>
 
 	<properties>
