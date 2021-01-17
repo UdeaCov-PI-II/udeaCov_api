@@ -2,6 +2,7 @@ package co.edu.udea.covapi.controller;
 
 import co.edu.udea.covapi.dto.UserRequestDTO;
 import co.edu.udea.covapi.dto.UserResponseDTO;
+import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.User;
 import co.edu.udea.covapi.populator.UserPopulator;
 import co.edu.udea.covapi.service.UserService;
@@ -57,17 +58,15 @@ public class UserController {
         return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userRequestDTO) throws ExecutionException, InterruptedException {
-        User user = new User();
-        userPopulator.inverselyPopulate(userRequestDTO,user);
-        return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
-    }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateUser(@PathVariable("id") final String id, @RequestBody UserRequestDTO userRequestDTO) throws ExecutionException, InterruptedException {
         User user = new User();
-        userPopulator.inverselyPopulate(userRequestDTO,user);
+        try {
+            userPopulator.inverselyPopulate(userRequestDTO,user);
+        } catch (PopulatorException e) {
+            logger.error(e.getMessage());
+        }
         userService.update(id,user);
     }
 

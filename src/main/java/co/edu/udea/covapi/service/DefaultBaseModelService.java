@@ -78,6 +78,19 @@ public class DefaultBaseModelService<T extends FirebaseModel> implements BaseMod
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public List<T> getByAttribute(Class<T> entityClass, String field, Object value) throws ExecutionException, InterruptedException {
+        CollectionReference collection = this.getFirestore().collection(getCollectionName());
+        Query query = collection.whereEqualTo(field, value);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+        return documents.stream().map(doc ->{
+            T model = doc.toObject(entityClass);
+            model.setModelId(doc.getId());
+            return model;
+        }).collect(Collectors.toList());
+    }
+
 
     public String getCollectionName() {
         return collectionName;

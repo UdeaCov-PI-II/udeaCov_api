@@ -13,4 +13,6 @@ public interface BaseModelService<T extends FirebaseModel>{
     void delete(String id) throws ExecutionException, InterruptedException;
     DocumentReference getReference(String id) throws ExecutionException, InterruptedException;
     List<T> getAll(Class<T> entityClass) throws ExecutionException, InterruptedException;
+    List<T> getByAttribute(Class<T> entityClass, String field, Object value) throws ExecutionException, InterruptedException;
+
 }

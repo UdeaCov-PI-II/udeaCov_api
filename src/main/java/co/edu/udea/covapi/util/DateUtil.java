@@ -6,6 +6,10 @@ import java.util.Date;
 
 public class DateUtil {
 
+    private DateUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
     public static Date convert(String dateStr) throws ParseException {

@@ -47,13 +47,13 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
         try {
             target.setStartTime(DateUtil.convert(source.getStartTimeStr()));
         } catch (ParseException e) {
-            throw new PopulatorException("The start date is not matched with the pattern " + DateUtil.DATE_PATTERN);
+            throw new PopulatorException("La fecha inicial no coincide con el patrón " + DateUtil.DATE_PATTERN);
         }
 
         try {
             target.setEndTime(DateUtil.convert(source.getEndTimeStr()));
         } catch (ParseException e) {
-            throw new PopulatorException("The end date is not matched with the pattern " + DateUtil.DATE_PATTERN);
+            throw new PopulatorException("La fecha final no coincide con el patrón " + DateUtil.DATE_PATTERN);
         }
 
         target.setPlace(source.getPlace());
