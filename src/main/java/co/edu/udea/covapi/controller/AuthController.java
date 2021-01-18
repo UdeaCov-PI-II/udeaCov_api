@@ -69,7 +69,7 @@ public class AuthController {
             if(e instanceof PopulatorException){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
             }else{
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede registrar el usuario en estos momentos", e);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No se puede registrar el usuario en estos momentos", e);
             }
 
         }

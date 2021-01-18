@@ -4,14 +4,10 @@ import com.google.cloud.firestore.DocumentReference;
 
 import java.util.Date;
 
-public class User extends FirebaseModel {
+public class User extends Person {
 
     private String username;
     private String password;
-    private String email;
-    private String documentType;
-    private String documentNumber;
-    private String fullName;
     private Date birthday;
     private String personalEmail;
     private String arlName;
@@ -38,38 +34,6 @@ public class User extends FirebaseModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(String documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getDocumentNumber() {
-        return documentNumber;
-    }
-
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public Date getBirthday() {

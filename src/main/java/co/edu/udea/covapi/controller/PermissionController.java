@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -63,8 +64,12 @@ public class PermissionController {
         Permission permission = new Permission();
         try {
             permissionPopulator.inverselyPopulate(permissionRequestDTO,permission);
-        } catch (PopulatorException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            if(e instanceof PopulatorException){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            }else{
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No se puede registrar el permiso en estos momentos", e);
+            }
         }
         return new ResponseEntity<>(permissionService.save(permission), HttpStatus.OK);
     }

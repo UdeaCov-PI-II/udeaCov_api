@@ -7,9 +7,12 @@ import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.model.PermissionStatus;
 import co.edu.udea.covapi.model.User;
+import co.edu.udea.covapi.service.LocationService;
 import co.edu.udea.covapi.service.PermissionStatusService;
+import co.edu.udea.covapi.service.UnitService;
 import co.edu.udea.covapi.service.UserService;
 import co.edu.udea.covapi.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +31,11 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
     @Autowired
     private PermissionStatusService permissionStatusService;
 
+    @Autowired
+    private UnitService unitService;
+
+    @Autowired
+    private LocationService locationService;
 
     @Override
     public void populate(Permission source, PermissionResponseDTO target) throws ExecutionException, InterruptedException {
@@ -36,7 +44,6 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
         target.setUser(userResponseDTO);
         target.setStartTimeStr(DateUtil.convert(source.getStartTime()));
         target.setEndTimeStr(DateUtil.convert(source.getEndTime()));
-        target.setPlace(source.getPlace());
         target.setStatus(source.getStatus().get().get().toObject(PermissionStatus.class));
         target.setId(source.getModelId());
     }
@@ -56,8 +63,16 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
             throw new PopulatorException("La fecha final no coincide con el patrón " + DateUtil.DATE_PATTERN);
         }
 
-        target.setPlace(source.getPlace());
         target.setStatus(permissionStatusService.getReference(source.getStatusId()));
-
+        target.setStatus(unitService.getReference(source.getManagerUnitId()));
+        target.setReason(source.getReason());
+        target.setLocation(locationService.getReference(source.getLocationId()));
+        target.setBuilding(source.getBuilding());
+        target.setOfficeNumber(source.getOfficeNumber());
+        if(StringUtils.isEmpty(source.getLocationOutOfUniversity()) && StringUtils.isEmpty(source.getLocationId())){
+            throw new PopulatorException("Se debe definir el lugar para el cual se solicita el permiso");
+        }
+        target.setRequestedDays(source.getRequestedDays());
+        target.setRequestedWorkingDay(source.getRequestedWorkingDay());
     }
 }
