@@ -1,7 +1,7 @@
 package co.edu.udea.covapi.populator;
 
-import co.edu.udea.covapi.dto.UserResponseDTO;
-import co.edu.udea.covapi.dto.UserUniversityInfoDTO;
+import co.edu.udea.covapi.dto.response.UserResponseDTO;
+import co.edu.udea.covapi.dto.request.UserUniversityInfoDTO;
 import co.edu.udea.covapi.model.UserUniversityInfo;
 import co.edu.udea.covapi.service.LocationService;
 import co.edu.udea.covapi.service.UnitService;
@@ -34,5 +34,6 @@ public class UserUniversityInfoPopulator implements Populator<UserUniversityInfo
         target.setTransportationMode(source.getTransportationMode());
         target.setLocation(locationService.getReference(source.getLocationId()));
         target.setUnit(unitService.getReference(source.getUnitId()));
+        target.setOccupation(source.getOccupation());
     }
 }

@@ -1,6 +1,6 @@
 package co.edu.udea.covapi.populator;
 
-import co.edu.udea.covapi.dto.BaseResponseDTO;
+import co.edu.udea.covapi.dto.response.BaseResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.FirebaseModel;
 

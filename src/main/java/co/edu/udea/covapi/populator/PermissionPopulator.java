@@ -1,9 +1,11 @@
 package co.edu.udea.covapi.populator;
 
-import co.edu.udea.covapi.dto.PermissionRequestDTO;
-import co.edu.udea.covapi.dto.PermissionResponseDTO;
-import co.edu.udea.covapi.dto.UserResponseDTO;
+import co.edu.udea.covapi.dto.request.PermissionRequestDTO;
+import co.edu.udea.covapi.dto.response.MediaResponseDTO;
+import co.edu.udea.covapi.dto.response.PermissionResponseDTO;
+import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
+import co.edu.udea.covapi.model.Location;
 import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.model.PermissionStatus;
 import co.edu.udea.covapi.model.User;
@@ -18,12 +20,16 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Component
 public class PermissionPopulator implements Populator<Permission, PermissionResponseDTO, PermissionRequestDTO> {
 
     @Autowired
     private UserPopulator userPopulator;
+
+    @Autowired
+    private MediaPopulator mediaPopulator;
 
     @Autowired
     private UserService userService;
@@ -44,8 +50,16 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
         target.setUser(userResponseDTO);
         target.setStartTimeStr(DateUtil.convert(source.getStartTime()));
         target.setEndTimeStr(DateUtil.convert(source.getEndTime()));
-        target.setStatus(source.getStatus().get().get().toObject(PermissionStatus.class));
+        target.setStatus(permissionStatusService.getModel(source.getStatus(),PermissionStatus.class).getDisplayName());
         target.setId(source.getModelId());
+        if(source.getMedias() != null && !source.getMedias().isEmpty()){
+            target.setMedias(source.getMedias().stream().map(media ->{
+                MediaResponseDTO mediaResponseDTO = new MediaResponseDTO();
+                mediaPopulator.populate(media,mediaResponseDTO);
+                return mediaResponseDTO;
+            }).collect(Collectors.toList()));
+        }
+        target.setLocation(locationService.getModel(source.getLocation(), Location.class).getName());
     }
 
     @Override
@@ -64,7 +78,7 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
         }
 
         target.setStatus(permissionStatusService.getReference(source.getStatusId()));
-        target.setStatus(unitService.getReference(source.getManagerUnitId()));
+        target.setManagerUnit(unitService.getReference(source.getManagerUnitId()));
         target.setReason(source.getReason());
         target.setLocation(locationService.getReference(source.getLocationId()));
         target.setBuilding(source.getBuilding());

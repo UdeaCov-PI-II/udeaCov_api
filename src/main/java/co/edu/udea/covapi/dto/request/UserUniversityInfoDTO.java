@@ -1,12 +1,13 @@
-package co.edu.udea.covapi.dto;
+package co.edu.udea.covapi.dto.request;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.List;
 
 public class UserUniversityInfoDTO implements Serializable {
 
     @NotEmpty(message = "El vínculo con la Universidad no puede ser vacio")
-    private String universityRelation;
+    private List<String> universityRelation;
     private String detailUniversityRelation;
     @NotEmpty(message = "El bloque y oficina no puede ser vacio")
     private String buildingAndOffice;
@@ -18,12 +19,13 @@ public class UserUniversityInfoDTO implements Serializable {
     private String extensionProjectName;
     @NotEmpty(message = "El medio de transporte no puede ser vacio")
     private String transportationMode;
+    private String occupation;
 
-    public String getUniversityRelation() {
+    public List<String> getUniversityRelation() {
         return universityRelation;
     }
 
-    public void setUniversityRelation(String universityRelation) {
+    public void setUniversityRelation(List<String> universityRelation) {
         this.universityRelation = universityRelation;
     }
 
@@ -81,5 +83,13 @@ public class UserUniversityInfoDTO implements Serializable {
 
     public void setTransportationMode(String transportationMode) {
         this.transportationMode = transportationMode;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
     }
 }

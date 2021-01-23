@@ -1,4 +1,4 @@
-package co.edu.udea.covapi.dto;
+package co.edu.udea.covapi.dto.request;
 
 import java.io.Serializable;
 

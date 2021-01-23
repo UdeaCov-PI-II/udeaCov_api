@@ -1,7 +1,7 @@
 package co.edu.udea.covapi.controller;
 
-import co.edu.udea.covapi.dto.UserRequestDTO;
-import co.edu.udea.covapi.dto.UserResponseDTO;
+import co.edu.udea.covapi.dto.request.UserRequestDTO;
+import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.User;
 import co.edu.udea.covapi.populator.UserPopulator;

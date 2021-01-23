@@ -81,6 +81,12 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+
 	</dependencies>
 
 

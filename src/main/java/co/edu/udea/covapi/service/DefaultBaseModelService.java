@@ -91,6 +91,11 @@ public class DefaultBaseModelService<T extends FirebaseModel> implements BaseMod
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public T getModel(DocumentReference reference, Class<T> entityClass) throws ExecutionException, InterruptedException {
+        return reference.get().get().toObject(entityClass);
+    }
+
 
     public String getCollectionName() {
         return collectionName;

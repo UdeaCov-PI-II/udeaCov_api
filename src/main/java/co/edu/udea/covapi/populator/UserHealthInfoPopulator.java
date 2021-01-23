@@ -1,7 +1,7 @@
 package co.edu.udea.covapi.populator;
 
-import co.edu.udea.covapi.dto.UserHealthInfoDTO;
-import co.edu.udea.covapi.dto.UserResponseDTO;
+import co.edu.udea.covapi.dto.request.UserHealthInfoDTO;
+import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.UserHealthInfo;
 import org.springframework.stereotype.Component;

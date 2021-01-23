@@ -1,7 +1,7 @@
 package co.edu.udea.covapi.populator;
 
-import co.edu.udea.covapi.dto.UserRequestDTO;
-import co.edu.udea.covapi.dto.UserResponseDTO;
+import co.edu.udea.covapi.dto.request.UserRequestDTO;
+import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.Role;
 import co.edu.udea.covapi.model.User;
@@ -36,7 +36,7 @@ public class UserPopulator implements Populator<User, UserResponseDTO, UserReque
     @Override
     public void populate(User source, UserResponseDTO target) throws ExecutionException, InterruptedException {
         target.setFullName(source.getFullName());
-        target.setRole(source.getRole().get().get().toObject(Role.class));
+        target.setRole(roleService.getModel(source.getRole(),Role.class));
         target.setId(source.getModelId());
         target.setUsername(source.getUsername());
     }
@@ -65,6 +65,7 @@ public class UserPopulator implements Populator<User, UserResponseDTO, UserReque
         target.setHealthInfo(healthInfo);
         target.setRole(roleService.getReference(StringUtils.isEmpty(source.getRoleId()) ? roleService.getUserRoleId()
                 : roleService.getRoleId(source.getRoleId())));
+        target.setPhoneContact(source.getPhoneContact());
     }
 
 }

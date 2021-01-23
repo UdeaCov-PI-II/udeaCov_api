@@ -14,6 +14,7 @@ public class User extends Person {
     private String town;
     private UserUniversityInfo universityInfo;
     private UserHealthInfo healthInfo;
+    private String phoneContact;
     private DocumentReference role;
 
     public User() {
@@ -90,5 +91,13 @@ public class User extends Person {
 
     public void setRole(DocumentReference role) {
         this.role = role;
+    }
+
+    public String getPhoneContact() {
+        return phoneContact;
+    }
+
+    public void setPhoneContact(String phoneContact) {
+        this.phoneContact = phoneContact;
     }
 }

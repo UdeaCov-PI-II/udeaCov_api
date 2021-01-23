@@ -1,12 +1,9 @@
-package co.edu.udea.covapi.dto;
+package co.edu.udea.covapi.dto.response;
 
 import java.io.Serializable;
 
 public class BaseResponseDTO implements Serializable {
     private String id;
-
-    public BaseResponseDTO() {
-    }
 
     public String getId() {
         return id;

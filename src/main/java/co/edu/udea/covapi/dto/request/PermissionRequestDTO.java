@@ -1,4 +1,4 @@
-package co.edu.udea.covapi.dto;
+package co.edu.udea.covapi.dto.request;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -26,8 +26,6 @@ public class PermissionRequestDTO implements Serializable {
     @NotEmpty(message = "La jornada de permanencia no puede ser vacia")
     private String requestedWorkingDay;
 
-    public PermissionRequestDTO() {
-    }
 
     public String getUserId() {
         return userId;

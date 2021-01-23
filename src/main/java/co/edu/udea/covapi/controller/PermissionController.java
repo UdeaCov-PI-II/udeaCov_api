@@ -1,8 +1,10 @@
 package co.edu.udea.covapi.controller;
 
-import co.edu.udea.covapi.dto.PermissionRequestDTO;
-import co.edu.udea.covapi.dto.PermissionResponseDTO;
+import co.edu.udea.covapi.dto.request.PermissionMediasRequestDTO;
+import co.edu.udea.covapi.dto.request.PermissionRequestDTO;
+import co.edu.udea.covapi.dto.response.PermissionResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
+import co.edu.udea.covapi.exception.ServiceException;
 import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.populator.PermissionPopulator;
 import co.edu.udea.covapi.service.PermissionService;
@@ -27,7 +29,6 @@ public class PermissionController {
 
     @Autowired
     private PermissionService permissionService;
-
 
     @Autowired
     private PermissionPopulator permissionPopulator;
@@ -84,6 +85,20 @@ public class PermissionController {
         }
         permissionService.update(id,permission);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}/medias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PermissionResponseDTO> updateMediasForPermission(@PathVariable("id") final String id,
+                                                            @ModelAttribute ("permissionRequest") PermissionMediasRequestDTO permissionRequest)
+            throws ExecutionException, InterruptedException {
+        PermissionResponseDTO permissionResponseDTO = new PermissionResponseDTO();
+        try {
+            Permission permission = permissionService.updateMediasForPermission(id,permissionRequest);
+            permissionPopulator.populate(permission,permissionResponseDTO);
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+        return new ResponseEntity<>(permissionResponseDTO,HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

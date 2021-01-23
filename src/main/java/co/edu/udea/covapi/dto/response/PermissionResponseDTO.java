@@ -1,19 +1,18 @@
-package co.edu.udea.covapi.dto;
+package co.edu.udea.covapi.dto.response;
 
-import co.edu.udea.covapi.model.PermissionStatus;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PermissionResponseDTO extends BaseResponseDTO implements Serializable {
 
     private UserResponseDTO user;
     private String startTimeStr;
     private String endTimeStr;
-    private String place;
-    private PermissionStatus status;
+    private String location;
+    private String status;
+    private List<MediaResponseDTO> medias;
 
-    public PermissionResponseDTO() {
-    }
 
     public UserResponseDTO getUser() {
         return user;
@@ -39,19 +38,27 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
         this.endTimeStr = endTimeStr;
     }
 
-    public String getPlace() {
-        return place;
+    public String getLocation() {
+        return location;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public PermissionStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(PermissionStatus status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<MediaResponseDTO> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<MediaResponseDTO> medias) {
+        this.medias = medias;
     }
 }

@@ -2,9 +2,12 @@ package co.edu.udea.covapi.model;
 
 import com.google.cloud.firestore.DocumentReference;
 
+import java.util.List;
+
 public class UserUniversityInfo extends FirebaseModel{
 
-    private String universityRelation;
+    private List<String> universityRelation;
+    private String occupation;
     private String detailUniversityRelation;
     private String buildingAndOffice;
     private DocumentReference unit;
@@ -17,11 +20,11 @@ public class UserUniversityInfo extends FirebaseModel{
         // required for firestore
     }
 
-    public String getUniversityRelation() {
+    public List<String> getUniversityRelation() {
         return universityRelation;
     }
 
-    public void setUniversityRelation(String universityRelation) {
+    public void setUniversityRelation(List<String> universityRelation) {
         this.universityRelation = universityRelation;
     }
 
@@ -79,5 +82,13 @@ public class UserUniversityInfo extends FirebaseModel{
 
     public void setTransportationMode(String transportationMode) {
         this.transportationMode = transportationMode;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
     }
 }

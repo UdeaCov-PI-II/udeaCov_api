@@ -1,4 +1,4 @@
-package co.edu.udea.covapi.dto;
+package co.edu.udea.covapi.dto.request;
 
 
 import javax.validation.Valid;
@@ -30,6 +30,7 @@ public class UserRequestDTO implements Serializable {
     private @Valid UserUniversityInfoDTO universityInfo;
     private @Valid UserHealthInfoDTO healthInfo;
     private String roleId;
+    private String phoneContact;
 
     public String getFullName() {
         return fullName;
@@ -133,5 +134,13 @@ public class UserRequestDTO implements Serializable {
 
     public void setHealthInfo(UserHealthInfoDTO healthInfo) {
         this.healthInfo = healthInfo;
+    }
+
+    public String getPhoneContact() {
+        return phoneContact;
+    }
+
+    public void setPhoneContact(String phoneContact) {
+        this.phoneContact = phoneContact;
     }
 }

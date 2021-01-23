@@ -18,9 +18,11 @@ public class Permission extends FirebaseModel {
     private String officeNumber;
     private String locationOutOfUniversity;
     private List<String> requestedDays;
+    private List<Media> medias;
     private String requestedWorkingDay;
 
     public Permission() {
+        // required for firestore
     }
 
     public DocumentReference getUser() {
@@ -117,5 +119,13 @@ public class Permission extends FirebaseModel {
 
     public void setRequestedWorkingDay(String requestedWorkingDay) {
         this.requestedWorkingDay = requestedWorkingDay;
+    }
+
+    public List<Media> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<Media> medias) {
+        this.medias = medias;
     }
 }
