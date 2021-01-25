@@ -1,7 +1,7 @@
 package co.edu.udea.covapi.storage.service;
 
 import co.edu.udea.covapi.model.Media;
-import co.edu.udea.covapi.util.MultiPartFileUtil;
+import co.edu.udea.covapi.util.FileUtil;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +49,7 @@ public class FirebaseStorageService implements StorageService {
 
     @Override
     public Media uploadFile(MultipartFile multipartFile) throws Exception {
-        File file = MultiPartFileUtil.convertToFile(multipartFile);
+        File file = FileUtil.convertToFile(multipartFile);
         Path filePath = file.toPath();
         String newFileName = generateFileName(multipartFile);
         Storage storage = storageOptions.getService();
@@ -62,9 +62,9 @@ public class FirebaseStorageService implements StorageService {
         media.setName(newFileName);
         media.setDowloadUrl(url.toString());
         media.setCreationTime(new Date());
+        FileUtil.removeFile(file);
         return media;
     }
-
 
     private String generateFileName(MultipartFile multiPart) {
         return Objects.requireNonNull(multiPart.getOriginalFilename()).replace(" ", "_") + "-" + new Date().getTime();

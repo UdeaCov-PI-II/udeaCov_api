@@ -1,13 +1,12 @@
 package co.edu.udea.covapi.model;
 
-import com.google.cloud.firestore.DocumentReference;
 
-public class Unit extends FirebaseModel{
+public class Unit extends FirebaseModel {
 
     private String name;
-    private DocumentReference manager;
+    private Person manager;
 
-    public Unit(){
+    public Unit() {
         // required for firestore
     }
 
@@ -19,11 +18,11 @@ public class Unit extends FirebaseModel{
         this.name = name;
     }
 
-    public DocumentReference getManager() {
+    public Person getManager() {
         return manager;
     }
 
-    public void setManager(DocumentReference manager) {
+    public void setManager(Person manager) {
         this.manager = manager;
     }
 }
