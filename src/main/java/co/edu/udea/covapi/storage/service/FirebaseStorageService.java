@@ -6,12 +6,10 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -38,12 +36,12 @@ public class FirebaseStorageService implements StorageService {
 
     @PostConstruct
     private void initializeFirebase() throws IOException {
-        File file = ResourceUtils.getFile(credentialsLocation);
-        try (InputStream in = new FileInputStream(file)){
+        ClassLoader cl = this.getClass().getClassLoader();
+        try (InputStream inputStream = cl.getResourceAsStream(credentialsLocation.replace("classpath:",""))){
             this.bucketId = projectId + bucketSufix;
             this.storageOptions = StorageOptions.newBuilder()
                     .setProjectId(projectId)
-                    .setCredentials(GoogleCredentials.fromStream(in)).build();
+                    .setCredentials(GoogleCredentials.fromStream(inputStream)).build();
         }
     }
 
