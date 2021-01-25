@@ -21,6 +21,7 @@ public class UnitPopulator implements Populator<Unit, UnitResponseDTO, Permissio
         Person person = source.getManager() != null ? source.getManager() : new Person();
         PersonResponseDTO personResponse = new PersonResponseDTO();
         personPopulator.populate(person, personResponse);
+        target.setManager(personResponse);
     }
 
     @Override
