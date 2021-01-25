@@ -1,5 +1,7 @@
 package co.edu.udea.covapi.model;
 
+import java.util.List;
+
 public class UserHealthInfo extends FirebaseModel{
 
     private float weight;
@@ -23,7 +25,7 @@ public class UserHealthInfo extends FirebaseModel{
     private String hasPermanentDisability;
     private String bloodType;
     private boolean hasRoomates;
-    private String roomatesConditions;
+    private List<String> roomatesConditions;
 
     public UserHealthInfo() {
         // required for firestore
@@ -197,12 +199,11 @@ public class UserHealthInfo extends FirebaseModel{
         this.hasRoomates = hasRoomates;
     }
 
-    public String getRoomatesConditions() {
+    public List<String> getRoomatesConditions() {
         return roomatesConditions;
     }
 
-    public void setRoomatesConditions(String roomatesConditions) {
+    public void setRoomatesConditions(List<String> roomatesConditions) {
         this.roomatesConditions = roomatesConditions;
     }
-
 }

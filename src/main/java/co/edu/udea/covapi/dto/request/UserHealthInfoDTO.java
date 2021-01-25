@@ -3,6 +3,7 @@ package co.edu.udea.covapi.dto.request;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
+import java.util.List;
 
 public class UserHealthInfoDTO implements Serializable {
 
@@ -30,7 +31,7 @@ public class UserHealthInfoDTO implements Serializable {
     @NotEmpty(message = "El grupo sanguineo no puede ser vacio")
     private String bloodType;
     private boolean hasRoomates;
-    private String roomatesConditions;
+    private List<String> roomatesConditions;
 
     public float getWeight() {
         return weight;
@@ -200,11 +201,11 @@ public class UserHealthInfoDTO implements Serializable {
         this.hasRoomates = hasRoomates;
     }
 
-    public String getRoomatesConditions() {
+    public List<String> getRoomatesConditions() {
         return roomatesConditions;
     }
 
-    public void setRoomatesConditions(String roomatesConditions) {
+    public void setRoomatesConditions(List<String> roomatesConditions) {
         this.roomatesConditions = roomatesConditions;
     }
 }
