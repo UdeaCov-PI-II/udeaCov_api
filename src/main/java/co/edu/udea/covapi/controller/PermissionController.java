@@ -1,10 +1,14 @@
 package co.edu.udea.covapi.controller;
 
+import co.edu.udea.covapi.dto.request.ApprovalRequestDTO;
 import co.edu.udea.covapi.dto.request.PermissionMediasRequestDTO;
 import co.edu.udea.covapi.dto.request.PermissionRequestDTO;
+import co.edu.udea.covapi.dto.response.MessageResponse;
 import co.edu.udea.covapi.dto.response.PermissionResponseDTO;
+import co.edu.udea.covapi.exception.CovApiRuleException;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.exception.ServiceException;
+import co.edu.udea.covapi.facade.PermissionFacade;
 import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.populator.PermissionPopulator;
 import co.edu.udea.covapi.service.PermissionService;
@@ -29,6 +33,9 @@ public class PermissionController {
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private PermissionFacade permissionFacade;
 
     @Autowired
     private PermissionPopulator permissionPopulator;
@@ -61,10 +68,11 @@ public class PermissionController {
     }
 
     @PostMapping
-    public ResponseEntity<String> savePermission(@RequestBody PermissionRequestDTO permissionRequestDTO) throws ExecutionException, InterruptedException {
+    public ResponseEntity<MessageResponse> savePermission(@RequestBody PermissionRequestDTO permissionRequestDTO) throws ExecutionException, InterruptedException {
         Permission permission = new Permission();
         try {
             permissionPopulator.inverselyPopulate(permissionRequestDTO,permission);
+            return new ResponseEntity<>(permissionFacade.createPermission(permission), HttpStatus.OK);
         } catch (Exception e) {
             if(e instanceof PopulatorException){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -72,7 +80,6 @@ public class PermissionController {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No se puede registrar el permiso en estos momentos", e);
             }
         }
-        return new ResponseEntity<>(permissionService.save(permission), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -99,6 +106,18 @@ public class PermissionController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
         return new ResponseEntity<>(permissionResponseDTO,HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{id}/approval" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PermissionResponseDTO> createApprovalForPermission(@PathVariable("id") final String id,
+                                                                             @RequestBody ApprovalRequestDTO approvalRequest){
+        try {
+            return new ResponseEntity<>(permissionFacade.createApproval(id, approvalRequest),HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        } catch (CovApiRuleException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

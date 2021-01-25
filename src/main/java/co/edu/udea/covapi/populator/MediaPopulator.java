@@ -13,6 +13,7 @@ public class MediaPopulator implements Populator<Media, MediaResponseDTO, Permis
         target.setName(source.getName());
         target.setOriginalName(source.getOriginalName());
         target.setDowloadUrl(source.getDowloadUrl());
+        target.setType(source.getType());
     }
 
     @Override

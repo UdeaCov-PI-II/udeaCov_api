@@ -5,7 +5,6 @@ import co.edu.udea.covapi.dto.request.PermissionMediasRequestDTO;
 import co.edu.udea.covapi.exception.ServiceException;
 import co.edu.udea.covapi.model.Media;
 import co.edu.udea.covapi.model.Permission;
-import co.edu.udea.covapi.populator.MediaPopulator;
 import co.edu.udea.covapi.storage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,6 @@ import java.util.List;
 @Service
 public class DefaultPermissionService extends DefaultBaseModelService<Permission> implements PermissionService{
 
-    @Autowired
-    private MediaPopulator mediaPopulator;
 
     @Autowired
     private StorageService storageService;
@@ -33,7 +30,7 @@ public class DefaultPermissionService extends DefaultBaseModelService<Permission
             Media coronaAppMedia = storageService.uploadFile(permissionMediasRequest.getCoronAppEvidence());
             coronaAppMedia.setType(MediaTypeEnum.CORONA_APP_MEDIA.toString());
             Media medellinMeCuidaMedia = storageService.uploadFile(permissionMediasRequest.getMedellinMeCuidaEvidence());
-            coronaAppMedia.setType(MediaTypeEnum.MEDELLIN_ME_CUIDA_MEDIA.toString());
+            medellinMeCuidaMedia.setType(MediaTypeEnum.MEDELLIN_ME_CUIDA_MEDIA.toString());
             Permission permission = this.get(permissionId,Permission.class);
             List<Media> medias = List.of(medellinMeCuidaMedia,coronaAppMedia);
             permission.setMedias(medias);

@@ -20,6 +20,8 @@ public class Permission extends FirebaseModel {
     private List<String> requestedDays;
     private List<Media> medias;
     private String requestedWorkingDay;
+    private DocumentReference nextReviewer;
+    private List<Approval> approvals;
 
     public Permission() {
         // required for firestore
@@ -127,5 +129,21 @@ public class Permission extends FirebaseModel {
 
     public void setMedias(List<Media> medias) {
         this.medias = medias;
+    }
+
+    public DocumentReference getNextReviewer() {
+        return nextReviewer;
+    }
+
+    public void setNextReviewer(DocumentReference nextReviewer) {
+        this.nextReviewer = nextReviewer;
+    }
+
+    public List<Approval> getApprovals() {
+        return approvals;
+    }
+
+    public void setApprovals(List<Approval> approvals) {
+        this.approvals = approvals;
     }
 }

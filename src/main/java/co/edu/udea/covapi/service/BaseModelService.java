@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface BaseModelService<T extends FirebaseModel>{
-    String save(T user) throws InterruptedException, ExecutionException;
+    String save(T model) throws InterruptedException, ExecutionException;
     T get(String id, Class<T> entityClass) throws ExecutionException, InterruptedException;
     void update(String id, T model) throws ExecutionException, InterruptedException;
     void delete(String id) throws ExecutionException, InterruptedException;

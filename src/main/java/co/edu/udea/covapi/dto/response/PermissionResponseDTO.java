@@ -10,8 +10,9 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
     private String startTimeStr;
     private String endTimeStr;
     private String location;
-    private String status;
+    private StatusResponseDTO status;
     private List<MediaResponseDTO> medias;
+    private List<ApprovalResponseDTO> approvals;
 
 
     public UserResponseDTO getUser() {
@@ -46,11 +47,11 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
         this.location = location;
     }
 
-    public String getStatus() {
+    public StatusResponseDTO getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusResponseDTO status) {
         this.status = status;
     }
 
@@ -60,5 +61,13 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
 
     public void setMedias(List<MediaResponseDTO> medias) {
         this.medias = medias;
+    }
+
+    public List<ApprovalResponseDTO> getApprovals() {
+        return approvals;
+    }
+
+    public void setApprovals(List<ApprovalResponseDTO> approvals) {
+        this.approvals = approvals;
     }
 }

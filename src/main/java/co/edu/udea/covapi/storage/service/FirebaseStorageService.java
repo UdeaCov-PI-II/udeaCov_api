@@ -61,6 +61,7 @@ public class FirebaseStorageService implements StorageService {
         media.setOriginalName(Objects.requireNonNull(file.getName()));
         media.setName(newFileName);
         media.setDowloadUrl(url.toString());
+        media.setCreationTime(new Date());
         return media;
     }
 
