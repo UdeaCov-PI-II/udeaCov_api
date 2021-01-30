@@ -12,12 +12,14 @@ import co.edu.udea.covapi.service.PermissionStatusService;
 import co.edu.udea.covapi.service.UnitService;
 import co.edu.udea.covapi.service.UserService;
 import co.edu.udea.covapi.util.DateUtil;
+import com.google.cloud.firestore.DocumentReference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -51,8 +53,21 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
     @Override
     public void populate(Permission source, PermissionResponseDTO target) throws ExecutionException, InterruptedException {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userPopulator.populate(source.getUser().get().get().toObject(User.class),userResponseDTO);
-        target.setUser(userResponseDTO);
+        User user = Optional.ofNullable(source.getUser()).map(DocumentReference::get).
+                map(reference -> {
+                    try {
+                        return reference.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    return null;
+                }).map(snap -> snap.toObject(User.class)).orElse(null);
+        if(user != null) {
+            userPopulator.populate(user,userResponseDTO);
+            target.setUser(userResponseDTO);
+        }else{
+            target.setUser(null);
+        }
         target.setStartTimeStr(DateUtil.convert(source.getStartTime()));
         target.setEndTimeStr(DateUtil.convert(source.getEndTime()));
         StatusResponseDTO statusResponse = new StatusResponseDTO();

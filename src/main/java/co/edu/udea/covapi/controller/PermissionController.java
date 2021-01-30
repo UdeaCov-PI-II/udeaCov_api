@@ -67,6 +67,9 @@ public class PermissionController {
     public ResponseEntity<PermissionResponseDTO> getPermission(@PathVariable("id") final String id) throws ExecutionException, InterruptedException {
 
         Permission permission = permissionService.get(id,Permission.class);
+        if(permission == null){
+            return new ResponseEntity<>(new PermissionResponseDTO(), HttpStatus.OK);
+        }
         PermissionResponseDTO permissionResponseDTO = new PermissionResponseDTO();
         permissionPopulator.populate(permission,permissionResponseDTO);
         return new ResponseEntity<>(permissionResponseDTO, HttpStatus.OK);
