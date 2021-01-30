@@ -4,12 +4,14 @@ import co.edu.udea.covapi.dto.request.ApprovalRequestDTO;
 import co.edu.udea.covapi.dto.request.PermissionMediasRequestDTO;
 import co.edu.udea.covapi.dto.request.PermissionRequestDTO;
 import co.edu.udea.covapi.dto.response.MessageResponse;
+import co.edu.udea.covapi.dto.response.PermissionItemListResponseDTO;
 import co.edu.udea.covapi.dto.response.PermissionResponseDTO;
 import co.edu.udea.covapi.exception.CovApiRuleException;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.exception.ServiceException;
 import co.edu.udea.covapi.facade.PermissionFacade;
 import co.edu.udea.covapi.model.Permission;
+import co.edu.udea.covapi.populator.PermissionItemListPopulator;
 import co.edu.udea.covapi.populator.PermissionPopulator;
 import co.edu.udea.covapi.service.PermissionService;
 import org.slf4j.Logger;
@@ -40,19 +42,22 @@ public class PermissionController {
     @Autowired
     private PermissionPopulator permissionPopulator;
 
+    @Autowired
+    private PermissionItemListPopulator permissionItemListPopulator;
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<PermissionResponseDTO>> getAllPermissions() throws ExecutionException, InterruptedException {
+    public ResponseEntity<List<PermissionItemListResponseDTO>> getAllPermissions() throws ExecutionException, InterruptedException {
         List<Permission> permissionsModelList = permissionService.getAll(Permission.class);
-        List<PermissionResponseDTO> permissions = permissionsModelList.stream().map(permission ->{
-            PermissionResponseDTO permissionResponseDTO = new PermissionResponseDTO();
+        List<PermissionItemListResponseDTO> permissions = permissionsModelList.stream().map(permission ->{
+            PermissionItemListResponseDTO permissionResponse = new PermissionItemListResponseDTO();
             try {
-                permissionPopulator.populate(permission,permissionResponseDTO);
+                permissionItemListPopulator.populate(permission,permissionResponse);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
-            return permissionResponseDTO;
+            return permissionResponse;
         }).collect(Collectors.toList());
         return new ResponseEntity<>(permissions,HttpStatus.OK);
     }
