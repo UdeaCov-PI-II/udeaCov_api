@@ -1,9 +1,8 @@
 package co.edu.udea.covapi.strategy;
 
-import co.edu.udea.covapi.messaging.dto.MessageRequestBuilder;
-import co.edu.udea.covapi.messaging.dto.MessageRequestDTO;
-import co.edu.udea.covapi.messaging.service.MessagingService;
 import co.edu.udea.covapi.model.*;
+import co.edu.udea.covapi.service.PermissionNotificationService;
+import co.edu.udea.covapi.service.PermissionStatusService;
 import co.edu.udea.covapi.service.UserService;
 import com.google.cloud.firestore.DocumentReference;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +27,10 @@ public class DefaultStatusTransitionStrategy implements StatusTransitionStrategy
     private NextReviewerStrategy nextReviewerStrategy;
 
     @Autowired
-    private MessagingService messagingService;
+    private PermissionNotificationService permissionNotificationService;
+
+    @Autowired
+    private PermissionStatusService permissionStatusService;
 
 
     @Override
@@ -48,16 +50,15 @@ public class DefaultStatusTransitionStrategy implements StatusTransitionStrategy
         }).collect(Collectors.toList());
         if(rolesWhoseMadeApprovals.containsAll(roles)){
             permission.setStatus(currentStatus.getNextStatus());
+            PermissionStatus newStatus = permissionStatusService.getModel(permission.getStatus(),PermissionStatus.class);
+            if(newStatus.isFinal()){
+                permissionNotificationService.notifyApprovedPermission(permission);
+            }
             nextReviewerStrategy.assignFirstReviewerOfCurrentStatus(permission);
             if(permission.getNextReviewer() != null){
-                notifyNextReviewer(permission);
+                permissionNotificationService.notifyNextReviewer(permission);
             }
         }
     }
 
-    private void notifyNextReviewer(Permission permission) throws ExecutionException, InterruptedException {
-        User user = userService.getModel(permission.getNextReviewer(), User.class);
-        messagingService.sendMessageToDevice(MessageRequestBuilder.builder()
-                .setMessage(permission.getModelId()).setDeviceToken(user.getDeviceToken()).build());
-    }
 }

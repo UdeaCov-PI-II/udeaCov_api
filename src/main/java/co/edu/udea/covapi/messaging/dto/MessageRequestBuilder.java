@@ -15,12 +15,15 @@ public class MessageRequestBuilder {
 
     private MessageRequestBuilder(){
         this.topic = MessagingConstants.DEFAULT_TOPIC;
-        this.title = MessagingConstants.DEFAULT_TITLE;
     }
 
+    public MessageRequestBuilder setTitle(String title) {
+        this.title = title;
+        return this;
+    }
 
     public MessageRequestBuilder setMessage(String message) {
-        this.message = String.format(MessagingConstants.DEFAULT_MESSAGE, message);
+        this.message = message;
         return this;
     }
 

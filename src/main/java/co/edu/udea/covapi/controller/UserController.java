@@ -2,6 +2,7 @@ package co.edu.udea.covapi.controller;
 
 import co.edu.udea.covapi.dto.request.DeviceTokenRequestDTO;
 import co.edu.udea.covapi.dto.request.UserRequestDTO;
+import co.edu.udea.covapi.dto.response.MessageResponse;
 import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
 import co.edu.udea.covapi.model.User;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -77,12 +79,18 @@ public class UserController {
     }
 
 
-    /*@PutMapping(value = "/{id}/deviceToken", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void updateDeviceToken (@RequestBody DeviceTokenRequestDTO deviceTokenRequest)
-            throws ExecutionException, InterruptedException {
+    @PutMapping(value = "/{id}/deviceToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageResponse> updateDeviceToken (@PathVariable("id") final String id,
+                                                              @RequestBody DeviceTokenRequestDTO deviceTokenRequest) throws ExecutionException, InterruptedException {
+        User user = userService.get(id, User.class);
+        if(user != null){
+            user.setDeviceToken(deviceTokenRequest.getDeviceToken());
+            userService.update(id,user);
+            return new ResponseEntity<>(new MessageResponse("Se actualizó el token exitosamente"),HttpStatus.OK);
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("El usuario con id %s no existe",id));
 
-        return new ResponseEntity<>(permissionResponseDTO,HttpStatus.OK);
-    }*/
+    }
 
 
 }
