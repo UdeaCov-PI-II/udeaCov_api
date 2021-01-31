@@ -97,7 +97,7 @@ public class DefaultPermissionFacade implements PermissionFacade {
             permission.setModelId(permissionId);
             nextReviewerStrategy.assignFirstReviewer(permission);
             permissionService.update(permissionId,permission);
-            return new MessageResponse("El permiso se creó exitosamente con el id " + permissionId);
+            return new MessageResponse(permissionId);
         }catch (ExecutionException | InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new ServiceException("No es posible crear un permiso en estos momentos. Inténtelo más tarde");

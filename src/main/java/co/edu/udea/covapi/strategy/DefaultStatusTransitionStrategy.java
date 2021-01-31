@@ -1,6 +1,8 @@
 package co.edu.udea.covapi.strategy;
 
 import co.edu.udea.covapi.model.*;
+import co.edu.udea.covapi.service.PermissionNotificationService;
+import co.edu.udea.covapi.service.PermissionStatusService;
 import co.edu.udea.covapi.service.UserService;
 import com.google.cloud.firestore.DocumentReference;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +26,12 @@ public class DefaultStatusTransitionStrategy implements StatusTransitionStrategy
     @Autowired
     private NextReviewerStrategy nextReviewerStrategy;
 
+    @Autowired
+    private PermissionNotificationService permissionNotificationService;
+
+    @Autowired
+    private PermissionStatusService permissionStatusService;
+
 
     @Override
     public void changeStateIfItsPossible(final Permission permission, final PermissionStatus currentStatus) throws ExecutionException, InterruptedException {
@@ -42,8 +50,15 @@ public class DefaultStatusTransitionStrategy implements StatusTransitionStrategy
         }).collect(Collectors.toList());
         if(rolesWhoseMadeApprovals.containsAll(roles)){
             permission.setStatus(currentStatus.getNextStatus());
+            PermissionStatus newStatus = permissionStatusService.getModel(permission.getStatus(),PermissionStatus.class);
+            if(newStatus.isFinal()){
+                permissionNotificationService.notifyApprovedPermission(permission);
+            }
             nextReviewerStrategy.assignFirstReviewerOfCurrentStatus(permission);
-            //@TODO If the permission came to final status, notify user
+            if(permission.getNextReviewer() != null){
+                permissionNotificationService.notifyNextReviewer(permission);
+            }
         }
     }
+
 }

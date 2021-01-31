@@ -7,13 +7,19 @@ import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.model.User;
 import co.edu.udea.covapi.service.LocationService;
 import co.edu.udea.covapi.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Component
 public class PermissionItemListPopulator implements Populator <Permission,PermissionItemListResponseDTO, PermissionItemListResponseDTO> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PermissionItemListPopulator.class);
 
     @Autowired
     private UserInfoPopulator userInfoPopulator;
@@ -35,5 +41,17 @@ public class PermissionItemListPopulator implements Populator <Permission,Permis
     @Override
     public void inverselyPopulate(PermissionItemListResponseDTO source, Permission target){
         throw new UnsupportedOperationException("The method is not implemented yet");
+    }
+
+    public List<PermissionItemListResponseDTO> getPermissionItemList(List<Permission> permissionsModelList) {
+        return permissionsModelList.stream().map( p ->{
+            PermissionItemListResponseDTO response = new PermissionItemListResponseDTO();
+            try {
+                this.populate(p,response);
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
+            }
+            return response;
+        }).collect(Collectors.toList());
     }
 }
