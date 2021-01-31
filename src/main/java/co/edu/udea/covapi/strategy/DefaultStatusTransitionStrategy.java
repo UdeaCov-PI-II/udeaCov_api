@@ -1,5 +1,8 @@
 package co.edu.udea.covapi.strategy;
 
+import co.edu.udea.covapi.messaging.dto.MessageRequestBuilder;
+import co.edu.udea.covapi.messaging.dto.MessageRequestDTO;
+import co.edu.udea.covapi.messaging.service.MessagingService;
 import co.edu.udea.covapi.model.*;
 import co.edu.udea.covapi.service.UserService;
 import com.google.cloud.firestore.DocumentReference;
@@ -24,6 +27,9 @@ public class DefaultStatusTransitionStrategy implements StatusTransitionStrategy
     @Autowired
     private NextReviewerStrategy nextReviewerStrategy;
 
+    @Autowired
+    private MessagingService messagingService;
+
 
     @Override
     public void changeStateIfItsPossible(final Permission permission, final PermissionStatus currentStatus) throws ExecutionException, InterruptedException {
@@ -43,7 +49,15 @@ public class DefaultStatusTransitionStrategy implements StatusTransitionStrategy
         if(rolesWhoseMadeApprovals.containsAll(roles)){
             permission.setStatus(currentStatus.getNextStatus());
             nextReviewerStrategy.assignFirstReviewerOfCurrentStatus(permission);
-            //@TODO If the permission came to final status, notify user
+            if(permission.getNextReviewer() != null){
+                notifyNextReviewer(permission);
+            }
         }
+    }
+
+    private void notifyNextReviewer(Permission permission) throws ExecutionException, InterruptedException {
+        User user = userService.getModel(permission.getNextReviewer(), User.class);
+        messagingService.sendMessageToDevice(MessageRequestBuilder.builder()
+                .setMessage(permission.getModelId()).setDeviceToken(user.getDeviceToken()).build());
     }
 }

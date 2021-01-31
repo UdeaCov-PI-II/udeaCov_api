@@ -16,6 +16,8 @@ public class User extends Person {
     private UserHealthInfo healthInfo;
     private String phoneContact;
     private DocumentReference role;
+    private String deviceToken;
+
 
     public User() {
         // required for firestore
@@ -99,5 +101,13 @@ public class User extends Person {
 
     public void setPhoneContact(String phoneContact) {
         this.phoneContact = phoneContact;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

@@ -51,6 +51,7 @@ public class DefaultNextReviewerStrategy implements NextReviewerStrategy {
             LOG.error("El permiso no puede iniciar el proceso de aprobación, porque no existe un estado definido como inicial");
             return;
         }
+        permission.setStatus(permissionStatusService.getReference(initialStatus.getModelId()));
         List<DocumentReference> reviewers = initialStatus.getReviewersRoles();
         if(CollectionUtils.isEmpty(reviewers)){
             LOG.error("El permiso no puede iniciar el proceso de aprobación, porque no existen roles asignados al estado inicial");

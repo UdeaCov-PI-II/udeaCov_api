@@ -1,5 +1,6 @@
 package co.edu.udea.covapi.controller;
 
+import co.edu.udea.covapi.dto.request.DeviceTokenRequestDTO;
 import co.edu.udea.covapi.dto.request.UserRequestDTO;
 import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
@@ -74,6 +75,14 @@ public class UserController {
     public void deletUser(@PathVariable("id") final String id) throws ExecutionException, InterruptedException {
         userService.delete(id);
     }
+
+
+    /*@PutMapping(value = "/{id}/deviceToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateDeviceToken (@RequestBody DeviceTokenRequestDTO deviceTokenRequest)
+            throws ExecutionException, InterruptedException {
+
+        return new ResponseEntity<>(permissionResponseDTO,HttpStatus.OK);
+    }*/
 
 
 }
