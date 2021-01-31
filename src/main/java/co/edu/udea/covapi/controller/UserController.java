@@ -3,10 +3,15 @@ package co.edu.udea.covapi.controller;
 import co.edu.udea.covapi.dto.request.DeviceTokenRequestDTO;
 import co.edu.udea.covapi.dto.request.UserRequestDTO;
 import co.edu.udea.covapi.dto.response.MessageResponse;
+import co.edu.udea.covapi.dto.response.PermissionItemListResponseDTO;
 import co.edu.udea.covapi.dto.response.UserResponseDTO;
 import co.edu.udea.covapi.exception.PopulatorException;
+import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.model.User;
+import co.edu.udea.covapi.populator.PermissionItemListPopulator;
 import co.edu.udea.covapi.populator.UserPopulator;
+import co.edu.udea.covapi.service.PermissionService;
+import co.edu.udea.covapi.service.RoleService;
 import co.edu.udea.covapi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +37,15 @@ public class UserController {
 
     @Autowired
     private UserPopulator userPopulator;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private PermissionItemListPopulator permissionItemListPopulator;
+
+    @Autowired
+    private RoleService roleService;
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -91,6 +105,18 @@ public class UserController {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("El usuario con id %s no existe",id));
 
     }
+
+
+    @GetMapping(value = "/{id}/permissions",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<PermissionItemListResponseDTO>> getPermissionsByUser(@PathVariable("id") final String id) throws ExecutionException, InterruptedException {
+
+        List<Permission> permissionsModelList = permissionService.getByAttribute(Permission.class,"user", userService.getReference(id));
+        List<PermissionItemListResponseDTO> userPermissions = permissionItemListPopulator.getPermissionItemList(permissionsModelList);
+        return new ResponseEntity<>(userPermissions,HttpStatus.OK);
+    }
+
+
 
 
 }

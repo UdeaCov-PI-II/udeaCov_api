@@ -14,8 +14,6 @@ import co.edu.udea.covapi.model.Permission;
 import co.edu.udea.covapi.populator.PermissionItemListPopulator;
 import co.edu.udea.covapi.populator.PermissionPopulator;
 import co.edu.udea.covapi.service.PermissionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,13 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/permissions")
 public class PermissionController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PermissionController.class);
 
     @Autowired
     private PermissionService permissionService;
@@ -50,15 +46,7 @@ public class PermissionController {
     @ResponseBody
     public ResponseEntity<List<PermissionItemListResponseDTO>> getAllPermissions() throws ExecutionException, InterruptedException {
         List<Permission> permissionsModelList = permissionService.getAll(Permission.class);
-        List<PermissionItemListResponseDTO> permissions = permissionsModelList.stream().map(permission ->{
-            PermissionItemListResponseDTO permissionResponse = new PermissionItemListResponseDTO();
-            try {
-                permissionItemListPopulator.populate(permission,permissionResponse);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
-            return permissionResponse;
-        }).collect(Collectors.toList());
+        List<PermissionItemListResponseDTO> permissions = permissionItemListPopulator.getPermissionItemList(permissionsModelList);
         return new ResponseEntity<>(permissions,HttpStatus.OK);
     }
 
