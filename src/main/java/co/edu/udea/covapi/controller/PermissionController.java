@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping(value = "/permissions")
 public class PermissionController {
 
-
     @Autowired
     private PermissionService permissionService;
 
@@ -44,10 +43,15 @@ public class PermissionController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<PermissionItemListResponseDTO>> getAllPermissions() throws ExecutionException, InterruptedException {
-        List<Permission> permissionsModelList = permissionService.getAll(Permission.class);
-        List<PermissionItemListResponseDTO> permissions = permissionItemListPopulator.getPermissionItemList(permissionsModelList);
-        return new ResponseEntity<>(permissions,HttpStatus.OK);
+    public ResponseEntity<List<PermissionItemListResponseDTO>> getAllPermissions(@RequestParam(required = false) String userId,
+                                                                                 @RequestParam(required = false) String userRole,
+                                                                                 @RequestParam(required = false) String docType,
+                                                                                 @RequestParam(required = false) String docNumber){
+        try {
+            return new ResponseEntity<>(permissionFacade.getPermissions(userId, userRole, docType, docNumber),HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +65,7 @@ public class PermissionController {
     }
 
     @PostMapping
-    public ResponseEntity<MessageResponse> savePermission(@RequestBody PermissionRequestDTO permissionRequestDTO) throws ExecutionException, InterruptedException {
+    public ResponseEntity<MessageResponse> savePermission(@RequestBody PermissionRequestDTO permissionRequestDTO){
         Permission permission = new Permission();
         try {
             permissionPopulator.inverselyPopulate(permissionRequestDTO,permission);

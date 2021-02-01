@@ -3,14 +3,8 @@ package co.edu.udea.covapi.populator;
 import co.edu.udea.covapi.dto.request.PermissionRequestDTO;
 import co.edu.udea.covapi.dto.response.*;
 import co.edu.udea.covapi.exception.PopulatorException;
-import co.edu.udea.covapi.model.Location;
-import co.edu.udea.covapi.model.Permission;
-import co.edu.udea.covapi.model.PermissionStatus;
-import co.edu.udea.covapi.model.User;
-import co.edu.udea.covapi.service.LocationService;
-import co.edu.udea.covapi.service.PermissionStatusService;
-import co.edu.udea.covapi.service.UnitService;
-import co.edu.udea.covapi.service.UserService;
+import co.edu.udea.covapi.model.*;
+import co.edu.udea.covapi.service.*;
 import co.edu.udea.covapi.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +31,9 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
     private StatusPopulator statusPopulator;
 
     @Autowired
+    private EntrancePopulator entrancePopulator;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -47,6 +44,9 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
 
     @Autowired
     private LocationService locationService;
+
+    @Autowired
+    private EntranceService entranceService;
 
     @Override
     public void populate(Permission source, PermissionResponseDTO target) throws ExecutionException, InterruptedException {
@@ -61,6 +61,7 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
         target.setId(source.getModelId());
         populateMedias(source, target);
         populateApprovals(source,target);
+        populateEntrance(source,target);
         target.setLocation(locationService.getModel(source.getLocation(), Location.class).getName());
     }
 
@@ -85,6 +86,15 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
                 }
                 return approvalResponse;
             }).collect(Collectors.toList()));
+        }
+    }
+
+    private void populateEntrance(Permission source, PermissionResponseDTO target) throws ExecutionException, InterruptedException {
+        if(source.getEntrance() != null){
+            EntranceResponseDTO entranceResponse = new EntranceResponseDTO();
+            Entrance entrance = entranceService.getModel(source.getEntrance(), Entrance.class);
+            entrancePopulator.populate(entrance, entranceResponse);
+            target.setEntrance(entranceResponse);
         }
     }
 

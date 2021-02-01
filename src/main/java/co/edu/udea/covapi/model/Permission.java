@@ -22,6 +22,7 @@ public class Permission extends FirebaseModel {
     private String requestedWorkingDay;
     private DocumentReference nextReviewer;
     private List<Approval> approvals;
+    private DocumentReference entrance;
 
     public Permission() {
         // required for firestore
@@ -145,5 +146,13 @@ public class Permission extends FirebaseModel {
 
     public void setApprovals(List<Approval> approvals) {
         this.approvals = approvals;
+    }
+
+    public DocumentReference getEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(DocumentReference entrance) {
+        this.entrance = entrance;
     }
 }

@@ -23,21 +23,23 @@ public class DefaultPermissionNotificationService implements PermissionNotificat
     @Override
     public void notifyNextReviewer(Permission permission) throws ExecutionException, InterruptedException {
         List<User> users = userService.getByAttribute(User.class,"role",permission.getNextReviewer());
-        users.forEach(user->
+        users.stream().filter(user -> user.getDeviceToken() != null).forEach( userWithToken->
             messagingService.sendMessageToDevice(MessageRequestBuilder.builder()
                     .setTitle(MessagingConstants.NEEDS_APPROVE_TITLE)
                     .setMessage(String.format(MessagingConstants.NEEDS_APPROVE_MESSAGE, permission.getModelId()))
-                    .setDeviceToken(user.getDeviceToken()).build())
+                    .setDeviceToken(userWithToken.getDeviceToken()).build())
         );
     }
 
     @Override
     public void notifyApprovedPermission(Permission permission) throws ExecutionException, InterruptedException {
         User user = userService.getModel(permission.getUser(), User.class);
-        messagingService.sendMessageToDevice(MessageRequestBuilder.builder()
-                .setTitle(MessagingConstants.APPROVED_TITLE)
-                .setMessage(String.format(MessagingConstants.APPROVED_MESSAGE, permission.getModelId()))
-                .setDeviceToken(user.getDeviceToken()).build());
+        if(user.getDeviceToken() != null){
+            messagingService.sendMessageToDevice(MessageRequestBuilder.builder()
+                    .setTitle(MessagingConstants.APPROVED_TITLE)
+                    .setMessage(String.format(MessagingConstants.APPROVED_MESSAGE, permission.getModelId()))
+                    .setDeviceToken(user.getDeviceToken()).build());
+        }
     }
 
     @Override

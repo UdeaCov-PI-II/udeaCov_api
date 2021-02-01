@@ -13,7 +13,7 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
     private StatusResponseDTO status;
     private List<MediaResponseDTO> medias;
     private List<ApprovalResponseDTO> approvals;
-
+    private EntranceResponseDTO entrance;
 
     public UserResponseDTO getUser() {
         return user;
@@ -69,5 +69,13 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
 
     public void setApprovals(List<ApprovalResponseDTO> approvals) {
         this.approvals = approvals;
+    }
+
+    public EntranceResponseDTO getEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(EntranceResponseDTO entrance) {
+        this.entrance = entrance;
     }
 }

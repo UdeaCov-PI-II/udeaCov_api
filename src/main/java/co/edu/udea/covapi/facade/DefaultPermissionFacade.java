@@ -2,17 +2,21 @@ package co.edu.udea.covapi.facade;
 
 import co.edu.udea.covapi.dto.request.ApprovalRequestDTO;
 import co.edu.udea.covapi.dto.response.MessageResponse;
+import co.edu.udea.covapi.dto.response.PermissionItemListResponseDTO;
 import co.edu.udea.covapi.dto.response.PermissionResponseDTO;
 import co.edu.udea.covapi.exception.CovApiRuleException;
 import co.edu.udea.covapi.exception.ServiceException;
 import co.edu.udea.covapi.model.*;
 import co.edu.udea.covapi.populator.ApprovalPopulator;
+import co.edu.udea.covapi.populator.PermissionItemListPopulator;
 import co.edu.udea.covapi.populator.PermissionPopulator;
 import co.edu.udea.covapi.service.PermissionService;
 import co.edu.udea.covapi.service.PermissionStatusService;
+import co.edu.udea.covapi.service.RoleService;
 import co.edu.udea.covapi.service.UserService;
 import co.edu.udea.covapi.strategy.NextReviewerStrategy;
 import co.edu.udea.covapi.strategy.StatusTransitionStrategy;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,9 @@ public class DefaultPermissionFacade implements PermissionFacade {
     private UserService userService;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private PermissionStatusService permissionStatusService;
 
     @Autowired
@@ -48,6 +55,9 @@ public class DefaultPermissionFacade implements PermissionFacade {
 
     @Autowired
     private StatusTransitionStrategy statusTransitionStrategy;
+
+    @Autowired
+    private PermissionItemListPopulator permissionItemListPopulator;
 
     @Override
     public PermissionResponseDTO createApproval(String permissionId, ApprovalRequestDTO approvalRequest) throws ServiceException, CovApiRuleException {
@@ -103,5 +113,39 @@ public class DefaultPermissionFacade implements PermissionFacade {
             throw new ServiceException("No es posible crear un permiso en estos momentos. Inténtelo más tarde");
         }
     }
+
+    @Override
+    public List<PermissionItemListResponseDTO> getPermissions(String userId, String nextReviewer, String docType, String docNumber) throws ServiceException {
+        List<Permission> permissions = new ArrayList<>();
+
+        try {
+
+            if(StringUtils.isEmpty(userId) && StringUtils.isEmpty(nextReviewer) && StringUtils.isEmpty(docType)
+                    && StringUtils.isEmpty(docNumber)){
+                permissions = permissionService.getAll(Permission.class);
+            }
+
+            if(StringUtils.isNotEmpty(userId)){
+                permissions = permissionService.getByAttribute(Permission.class, "user", userService.getReference(userId));
+            }
+
+            if(StringUtils.isNotEmpty(nextReviewer)){
+                permissions = permissionService.getByAttribute(Permission.class, "nextReviewer", roleService.getReference(nextReviewer));
+            }
+
+            if(StringUtils.isNotEmpty(docType) && StringUtils.isNotEmpty(docNumber)){
+                User user = userService.getByDocNumberAndDocType(docType,docNumber);
+                if(user != null){
+                    permissions = permissionService.getByAttribute(Permission.class, "user", userService.getReference(user.getModelId()));
+                }
+            }
+        }catch (ExecutionException | InterruptedException e){
+            Thread.currentThread().interrupt();
+            throw new ServiceException("No es posible obtener los permisos estos momentos. Inténtelo más tarde");
+        }
+        return permissionItemListPopulator.getPermissionItemList(permissions);
+
+    }
+
 
 }
