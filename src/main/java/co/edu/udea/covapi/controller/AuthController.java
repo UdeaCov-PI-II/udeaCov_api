@@ -61,6 +61,9 @@ public class AuthController {
             if (userService.getByUsername(signUpRequest.getUsername()) != null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya existe");
             }
+            if (userService.getByDocNumberAndDocType(signUpRequest.getDocumentType(), signUpRequest.getDocumentNumber()) != null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya existe");
+            }
             User user = new User();
             userPopulator.inverselyPopulate(signUpRequest,user);
             userService.save(user);
