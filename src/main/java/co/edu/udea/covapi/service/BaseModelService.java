@@ -4,6 +4,7 @@ import co.edu.udea.covapi.model.FirebaseModel;
 import com.google.cloud.firestore.DocumentReference;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface BaseModelService<T extends FirebaseModel>{
@@ -15,5 +16,6 @@ public interface BaseModelService<T extends FirebaseModel>{
     List<T> getAll(Class<T> entityClass) throws ExecutionException, InterruptedException;
     List<T> getByAttribute(Class<T> entityClass, String field, Object value) throws ExecutionException, InterruptedException;
     T getModel(DocumentReference reference, Class<T> entityClass) throws ExecutionException, InterruptedException;
+    List<T> getByAttributes(Class<T> entityClass, Map<String,Object> attributesMap) throws ExecutionException, InterruptedException;
 
-}
+    }

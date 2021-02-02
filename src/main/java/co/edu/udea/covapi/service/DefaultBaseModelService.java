@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,22 @@ public class DefaultBaseModelService<T extends FirebaseModel> implements BaseMod
     public List<T> getByAttribute(Class<T> entityClass, String field, Object value) throws ExecutionException, InterruptedException {
         CollectionReference collection = this.getFirestore().collection(getCollectionName());
         Query query = collection.whereEqualTo(field, value);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+        return documents.stream().map(doc ->{
+            T model = doc.toObject(entityClass);
+            model.setModelId(doc.getId());
+            return model;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<T> getByAttributes(Class<T> entityClass, Map<String,Object> attributesMap) throws ExecutionException, InterruptedException {
+        CollectionReference collection = this.getFirestore().collection(getCollectionName());
+        Query query = collection.limit(1000);
+        for (Map.Entry<String,Object> entry : attributesMap.entrySet()){
+            query = query.whereEqualTo(entry.getKey(), entry.getValue());
+        }
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
         return documents.stream().map(doc ->{

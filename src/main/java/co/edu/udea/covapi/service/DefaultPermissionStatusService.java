@@ -19,4 +19,11 @@ public class DefaultPermissionStatusService extends DefaultBaseModelService<Perm
         List<PermissionStatus> status = this.getByAttribute(PermissionStatus.class, "isInitial", true);
         return CollectionUtils.isEmpty(status) ? null : status.get(0);
     }
+
+    @Override
+    public PermissionStatus getFinalStatus() throws ExecutionException, InterruptedException {
+        List<PermissionStatus> status = this.getByAttribute(PermissionStatus.class, "isFinal", true);
+        return CollectionUtils.isEmpty(status) ? null : status.get(0);
+    }
+
 }
