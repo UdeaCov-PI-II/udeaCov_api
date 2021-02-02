@@ -14,6 +14,8 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
     private List<MediaResponseDTO> medias;
     private List<ApprovalResponseDTO> approvals;
     private EntranceResponseDTO entrance;
+    private String reason;
+
 
     public UserResponseDTO getUser() {
         return user;
@@ -77,5 +79,13 @@ public class PermissionResponseDTO extends BaseResponseDTO implements Serializab
 
     public void setEntrance(EntranceResponseDTO entrance) {
         this.entrance = entrance;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

@@ -77,6 +77,7 @@ public class PermissionPopulator implements Populator<Permission, PermissionResp
         populateMedias(source, target);
         populateApprovals(source,target);
         populateEntrance(source,target);
+        target.setReason(source.getReason());
         target.setLocation(locationService.getModel(source.getLocation(), Location.class).getName());
     }
 

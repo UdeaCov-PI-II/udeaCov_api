@@ -119,7 +119,7 @@ public class DefaultPermissionFacade implements PermissionFacade {
             }
 
             if(StringUtils.isNotEmpty(nextReviewer)){
-                queries.put("nextReviewer", roleService.getReference(nextReviewer));
+                queries.put("nextReviewer", roleService.getReference(roleService.getRoleId(nextReviewer)));
             }
 
             if(StringUtils.isNotEmpty(docType) && StringUtils.isNotEmpty(docNumber)){
