@@ -25,8 +25,8 @@ public class EntrancePopulator implements Populator<Entrance, EntranceResponseDT
         target.setPermissionId(source.getPermission().getId());
         target.setEntryTimeStr(source.getEntryTime() == null ? StringUtils.EMPTY : DateUtil.convert(source.getEntryTime()));
         target.setEntryTemperature(source.getEntryTemperature());
-        target.setDepartureTimeStr(DateUtil.convert(source.getDepartureTime()));
         target.setDepartureTimeStr(source.getDepartureTime()== null ? StringUtils.EMPTY : DateUtil.convert(source.getDepartureTime()));
+        target.setDepartureTemperature(source.getDepartureTemperature());
     }
 
     @Override
