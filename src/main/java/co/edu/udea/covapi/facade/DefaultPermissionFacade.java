@@ -126,6 +126,8 @@ public class DefaultPermissionFacade implements PermissionFacade {
                 User user = userService.getByDocNumberAndDocType(docType,docNumber);
                 if(user != null){
                     queries.put("user", userService.getReference(user.getModelId()));
+                }else{
+                    return Collections.emptyList();
                 }
             }
             if(showOnlyApproved){
