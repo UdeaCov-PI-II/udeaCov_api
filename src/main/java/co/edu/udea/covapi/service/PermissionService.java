@@ -5,5 +5,5 @@ import co.edu.udea.covapi.exception.ServiceException;
 import co.edu.udea.covapi.model.Permission;
 
 public interface PermissionService extends BaseModelService<Permission>{
-    Permission updateMediasForPermission(final String permissionId, final PermissionMediasRequestDTO permissionMediasRequest) throws ServiceException;
+    void updateMediasForPermission(final String permissionId, final PermissionMediasRequestDTO permissionMediasRequest) throws ServiceException;
 }

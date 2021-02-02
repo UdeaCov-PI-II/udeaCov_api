@@ -46,9 +46,10 @@ public class PermissionController {
     public ResponseEntity<List<PermissionItemListResponseDTO>> getAllPermissions(@RequestParam(required = false) String userId,
                                                                                  @RequestParam(required = false) String userRole,
                                                                                  @RequestParam(required = false) String docType,
-                                                                                 @RequestParam(required = false) String docNumber){
+                                                                                 @RequestParam(required = false) String docNumber,
+                                                                                 @RequestParam(required = false) boolean showOnlyApproved){
         try {
-            return new ResponseEntity<>(permissionFacade.getPermissions(userId, userRole, docType, docNumber),HttpStatus.OK);
+            return new ResponseEntity<>(permissionFacade.getPermissions(userId, userRole, docType, docNumber, showOnlyApproved),HttpStatus.OK);
         } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
@@ -95,21 +96,18 @@ public class PermissionController {
     }
 
     @PutMapping(value = "/{id}/medias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE ,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PermissionResponseDTO> updateMediasForPermission(@PathVariable("id") final String id,
-                                                            @ModelAttribute ("permissionRequest") PermissionMediasRequestDTO permissionRequest)
-            throws ExecutionException, InterruptedException {
-        PermissionResponseDTO permissionResponseDTO = new PermissionResponseDTO();
+    public ResponseEntity<MessageResponse> updateMediasForPermission(@PathVariable("id") final String id,
+                                                            @ModelAttribute ("permissionRequest") PermissionMediasRequestDTO permissionRequest) {
         try {
-            Permission permission = permissionService.updateMediasForPermission(id,permissionRequest);
-            permissionPopulator.populate(permission,permissionResponseDTO);
+            permissionService.updateMediasForPermission(id,permissionRequest);
         } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
-        return new ResponseEntity<>(permissionResponseDTO,HttpStatus.OK);
+        return new ResponseEntity<>(new MessageResponse("Los archivos se adjuntaron exitosamente"),HttpStatus.OK);
     }
 
     @PostMapping(value = "/{id}/approval" ,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PermissionResponseDTO> createApprovalForPermission(@PathVariable("id") final String id,
+    public ResponseEntity<MessageResponse> createApprovalForPermission(@PathVariable("id") final String id,
                                                                              @RequestBody ApprovalRequestDTO approvalRequest){
         try {
             return new ResponseEntity<>(permissionFacade.createApproval(id, approvalRequest),HttpStatus.OK);
