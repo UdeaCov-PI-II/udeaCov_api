@@ -5,6 +5,7 @@ import co.edu.udea.covapi.dto.response.EntranceResponseDTO;
 import co.edu.udea.covapi.model.Entrance;
 import co.edu.udea.covapi.service.PermissionService;
 import co.edu.udea.covapi.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +23,10 @@ public class EntrancePopulator implements Populator<Entrance, EntranceResponseDT
     public void populate(Entrance source, EntranceResponseDTO target){
         target.setId(source.getModelId());
         target.setPermissionId(source.getPermission().getId());
-        target.setEntryTimeStr(DateUtil.convert(source.getEntryTime()));
+        target.setEntryTimeStr(source.getEntryTime() == null ? StringUtils.EMPTY : DateUtil.convert(source.getEntryTime()));
         target.setEntryTemperature(source.getEntryTemperature());
         target.setDepartureTimeStr(DateUtil.convert(source.getDepartureTime()));
-        target.setDepartureTemperature(source.getDepartureTemperature());
+        target.setDepartureTimeStr(source.getDepartureTime()== null ? StringUtils.EMPTY : DateUtil.convert(source.getDepartureTime()));
     }
 
     @Override
